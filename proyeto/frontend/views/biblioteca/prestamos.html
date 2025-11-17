@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Biblioteca - Préstamos</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f4f6f9;
+        }
+        .card {
+            border-radius: 12px;
+        }
+        .btn-round {
+            border-radius: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">📚 Biblioteca</a>
+        <div>
+            <a href="index.html" class="btn btn-outline-light btn-sm me-2">Usuarios</a>
+            <a href="libros.html" class="btn btn-outline-light btn-sm me-2">Libros</a>
+            <a href="prestamos.html" class="btn btn-light btn-sm">Préstamos</a>
+        </div>
+    </div>
+</nav>
+
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold">Gestión de Préstamos</h3>
+        <button class="btn btn-primary btn-round" data-bs-toggle="modal" data-bs-target="#modalCrearPrestamo">+ Nuevo Préstamo</button>
+    </div>
+
+    <!-- TABLA -->
+    <div class="card shadow">
+        <div class="card-body">
+            <table class="table table-striped" id="tablaPrestamos">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Libro</th>
+                        <th>Fecha Préstamo</th>
+                        <th>Fecha Devolución</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- ============================
+    MODAL CREAR PRÉSTAMO
+============================ -->
+<div class="modal fade" id="modalCrearPrestamo" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Nuevo Préstamo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <form id="formCrearPrestamo">
+
+                    <div class="mb-2">
+                        <label>Usuario</label>
+                        <select class="form-select" name="id_usuario" required></select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label>Libro</label>
+                        <select class="form-select" name="id_libro" required></select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label>Fecha de Préstamo</label>
+                        <input type="date" class="form-control" name="fecha_prestamo" required>
+                    </div>
+
+                    <div class="mb-2">
+                        <label>Fecha de Devolución</label>
+                        <input type="date" class="form-control" name="fecha_devolucion" required>
+                    </div>
+
+                    <div class="mb-2">
+                        <label>Estado</label>
+                        <select class="form-select" name="estado" required>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Devuelto">Devuelto</option>
+                            <option value="Atrasado">Atrasado</option>
+                        </select>
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" form="formCrearPrestamo" class="btn btn-primary">Guardar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- ============================
+    MODAL EDITAR PRÉSTAMO
+============================ -->
+<div class="modal fade" id="modalEditarPrestamo" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title">Editar Préstamo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <form id="formEditarPrestamo">
+
+                    <input type="hidden" name="id_prestamo">
+
+                    <div class="mb-2">
+                        <label>Usuario</label>
+                        <select class="form-select" name="id_usuario" required></select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label>Libro</label>
+                        <select class="form-select" name="id_libro" required></select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label>Fecha de Préstamo</label>
+                        <input type="date" class="form-control" name="fecha_prestamo" required>
+                    </div>
+
+                    <div class="mb-2">
+                        <label>Fecha de Devolución</label>
+                        <input type="date" class="form-control" name="fecha_devolucion" required>
+                    </div>
+
+                    <div class="mb-2">
+                        <label>Estado</label>
+                        <select class="form-select" name="estado" required>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="Devuelto">Devuelto</option>
+                            <option value="Atrasado">Atrasado</option>
+                        </select>
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" form="formEditarPrestamo" class="btn btn-warning">Actualizar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Bootstrap + JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+const API = "http://localhost/SISTEMA_BIBLIOTECA/api/biblioteca.php";
+
+
+
+// ===============================
+//    CARGAR SELECTS (Usuarios, Libros)
+// ===============================
+function cargarSelects() {
+    // Usuarios
+    fetch(API + "?action=mostrar_usuarios")
+        .then(r => {
+            if (!r.ok) throw new Error("Error al cargar usuarios");
+            return r.json();
+        })
+        .then(r => r.json())
+        .then(resp => {
+            let select1 = document.querySelector("#formCrearPrestamo select[name='id_usuario']");
+            let select2 = document.querySelector("#formEditarPrestamo select[name='id_usuario']");
+            let opciones = resp.data.map(u => `<option value="${u.id_usuario}">${u.nombre}</option>`);
+            select1.innerHTML = opciones;
+            select2.innerHTML = opciones;
+        })
+        .catch(err => console.error(err));
+
+    // Libros
+    fetch(API + "?action=mostrar_libros")
+        .then(r => {
+            if (!r.ok) throw new Error("Error al cargar libros");
+            return r.json();
+        })
+        .then(r => r.json())
+        .then(resp => {
+            let select1 = document.querySelector("#formCrearPrestamo select[name='id_libro']");
+            let select2 = document.querySelector("#formEditarPrestamo select[name='id_libro']");
+            let opciones = resp.data.map(l => `<option value="${l.id_libro}">${l.titulo}</option>`);
+            select1.innerHTML = opciones;
+            select2.innerHTML = opciones;
+        })
+        .catch(err => console.error(err));
+}
+
+cargarSelects();
+
+
+// ===============================
+//    CARGAR TABLA
+// ===============================
+function cargarPrestamos() {
+    fetch(API + "?action=mostrar_prestamos")
+        .then(r => {
+            if (!r.ok) throw new Error("Error en la red");
+            return r.json();
+        })
+        .then(r => r.json())
+        .then(resp => {
+            let tabla = "";
+            resp.data.forEach(p => {
+                tabla += `
+                    <tr>
+                        <td>${p.id_prestamo}</td>
+                        <td>${p.usuario}</td>
+                        <td>${p.libro}</td>
+                        <td>${p.fecha_prestamo}</td>
+                        <td>${p.fecha_devolucion}</td>
+                        <td>${p.estado}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" onclick="abrirEditar(${p.id_prestamo})">Editar</button>
+                            <button class="btn btn-danger btn-sm" onclick="eliminarPrestamo(${p.id_prestamo})">Eliminar</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.querySelector("#tablaPrestamos tbody").innerHTML = tabla;
+        })
+        .catch(error => {
+            console.error('Error al cargar préstamos:', error);
+            alert("No se pudieron cargar los préstamos.");
+        });
+}
+
+cargarPrestamos();
+
+
+
+// ===============================
+//    EVENT LISTENER PARA CREAR
+// ===============================
+document.getElementById("formCrearPrestamo").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const modal = bootstrap.Modal.getInstance(document.getElementById('modalCrearPrestamo'));
+    let formData = new FormData(this);
+    formData.append("action", "crear_prestamo");
+
+    fetch(API, { method: "POST", body: formData })
+        .then(r => r.json())
+        .then(resp => {
+            alert(resp.message);
+            if (resp.success) {
+                modal.hide();
+                cargarPrestamos();
+            }
+        })
+        .catch(error => {
+            console.error('Error al crear préstamo:', error);
+            alert("Error de conexión al crear el préstamo.");
+        });
+});
+
+
+
+// ===============================
+//    ABRIR EDITAR
+// ===============================
+function abrirEditar(id) {
+    fetch(API + "?action=obtener_prestamo&id_prestamo=" + id)
+        .then(r => r.json())
+        .then(resp => {
+            if (!resp.success) return alert("No encontrado");
+
+            let f = document.getElementById("formEditarPrestamo");
+
+            f.id_prestamo.value = resp.data.id_prestamo;
+            f.id_usuario.value = resp.data.id_usuario;
+            f.id_libro.value = resp.data.id_libro;
+            f.fecha_prestamo.value = resp.data.fecha_prestamo;
+            f.fecha_devolucion.value = resp.data.fecha_devolucion;
+            f.estado.value = resp.data.estado;
+
+            new bootstrap.Modal(document.getElementById("modalEditarPrestamo")).show();
+        });
+}
+
+
+
+// ===============================
+//    ACTUALIZAR
+// ===============================
+function actualizarPrestamo() {
+    let formData = new FormData(document.getElementById("formEditarPrestamo"));
+    formData.append("action", "editar_prestamo");
+
+    fetch(API, { method: "POST", body: formData })
+        .then(r => r.json())
+        .then(resp => {
+            alert(resp.message);
+            if (resp.success) cargarPrestamos();

@@ -1,0 +1,117 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistema de Biblioteca - Eliminar Libro</title>
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    />
+</head>
+<body class="bg-light">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">📚 Biblioteca</a>
+            <div>
+                <a href="usuarios.html" class="btn btn-outline-light btn-sm me-2">Usuarios</a>
+                <a href="libros.html" class="btn btn-light btn-sm me-2">Libros</a>
+                <a href="prestamos.html" class="btn btn-outline-light btn-sm">Préstamos</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO -->
+    <div class="container my-5">
+        <h2 class="text-center mb-4">Eliminar Libro</h2>
+
+        <!-- Formulario para buscar -->
+        <div class="card shadow p-4 mb-4">
+            <h5 class="mb-3">Buscar libro por ID</h5>
+
+            <form id="buscarForm">
+                <div class="mb-3">
+                    <label for="buscar_id" class="form-label">ID del libro:</label>
+                    <input type="number" id="buscar_id" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Buscar libro</button>
+            </form>
+        </div>
+
+        <!-- Información del libro -->
+        <div id="infoLibro" class="card shadow p-4 d-none">
+            <h5>Datos del libro</h5>
+            <p><strong>ID:</strong> <span id="libro_id"></span></p>
+            <p><strong>Título:</strong> <span id="libro_titulo"></span></p>
+            <p><strong>Autor:</strong> <span id="libro_autor"></span></p>
+            <p><strong>Año:</strong> <span id="libro_anio"></span></p>
+            <p><strong>Categoría:</strong> <span id="libro_categoria"></span></p>
+            <p><strong>Stock:</strong> <span id="libro_stock"></span></p>
+
+            <button id="btnEliminar" class="btn btn-danger w-100 mt-3">
+                Eliminar libro
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const API_URL = "http://localhost/SISTEMA_BIBLIOTECA/api/biblioteca.php";
+
+        // Buscar libro por ID
+        document.getElementById("buscarForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const id = document.getElementById("buscar_id").value;
+
+            const response = await fetch(`${API_URL}?id_libro=${id}`);
+            const data = await response.json();
+
+            if (data.error) {
+                alert("Libro no encontrado.");
+                return;
+            }
+
+            // Mostrar información
+            document.getElementById("infoLibro").classList.remove("d-none");
+            document.getElementById("libro_id").innerText = data.id_libro;
+            document.getElementById("libro_titulo").innerText = data.titulo;
+            document.getElementById("libro_autor").innerText = data.autor;
+            document.getElementById("libro_anio").innerText = data.año; // Corregido a 'año' si la API devuelve eso
+            document.getElementById("libro_categoria").innerText = data.categoria;
+            document.getElementById("libro_stock").innerText = data.stock;
+        });
+
+        // Eliminar libro
+        document.getElementById("btnEliminar").addEventListener("click", async () => {
+            const id = document.getElementById("libro_id").innerText;
+
+            if (!confirm("¿Seguro que deseas eliminar este libro?")) return;
+
+            const formData = new FormData();
+            formData.append("action", "eliminar_libro");
+            formData.append("id_libro", id);
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    body: formData
+                });
+                const data = await response.json();
+                alert(data.message);
+                if (data.success) {
+                    location.reload();
+                }
+            } catch (error) {
+                console.error('Error al eliminar:', error);
+                alert("Error de conexión al intentar eliminar el libro.");
+            }
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
